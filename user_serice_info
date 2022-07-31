@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+user_service() {
+    service_name=$1
+    systemctl --user status --now "${service_name}.timer"
+}
+
+user_journal() {
+    service_name=$1
+    journalctl --user -xeu "${service_name}.service"
+}
+
+user_services() {
+    systemctl list-unit-files --user --state=enabled
+}
+
+service() {
+    service_name=$1
+    systemctl status "${service_name}.timer"
+}
+
+xjournal() {
+    service_name=$1
+    journalctl -xeu "${service_name}.service"
+}
+
+while getopts "axyj:s:" options
+do
+    case ${options} in
+        j)
+            user_journal ${OPTARG} ;;
+        s)
+            user_service ${OPTARG} ;;
+        a)
+            user_services ;;
+        x) 
+            service ${OPTARG} ;;
+        y) 
+            xjournal ${OPTARG} ;;
+        :) echo "option -$OPTARG requires an argument"
+            ;;
+    esac
+done

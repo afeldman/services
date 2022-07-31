@@ -1,0 +1,12 @@
+[Unit]
+Description=HDD Clearner Service
+
+[Service]
+Type=oneshot
+ExecStart=find ${HDD_TARGET} -not ( -name lost+found -prune -o -name canmessages -prune ) -mtime +${DAY_INTERVALL} -exec rm -rf {} \;
+EnvironmentFile=/run/metadata/clean_hdd/hdd_clean.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

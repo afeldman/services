@@ -1,0 +1,75 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  SYS_INSTALL_PATH: /etc/systemd/system/
+  LOCAL_INSTALL_PATH: ${HOME}/.config/systemd/user/
+  CONFIG_PATH: /run/metadata/
+
+tasks:    
+  reload:
+    desc: reload deamon
+    cmds:
+      - sudo systemctl daemon-reload
+  
+  # empty_folder
+  trash_cli:
+    desc: install the python trash cli package
+    cmds:
+      - pip install trash-cli
+  trash_install: 
+    desc: install the service to user space
+    cmds:
+      - cp ./empty_trash/empty_trash.timer {{.LOCAL_INSTALL_PATH}}
+      - cp ./empty_trash/empty_trash.service {{.LOCAL_INSTALL_PATH}}
+  trash_enable: 
+    desc: enable the service
+    cmds:
+      - systemctl --user enable --now empty_trash.timer
+  trash_make:
+    desc: make the trash empty
+    deps: [trash_cli, trash_install, trash_enable]
+    silent: true
+
+  # clean harddrive
+  hdd_clean_setup:
+    desc: set up the hdd clean environment 
+    cmds:
+      - sudo mkdir -p {{.CONFIG_PATH}}/clean_hdd/
+  hdd_clean_install:
+    desc: install hdd clean service
+    cmds:
+      - sudo cp ./clean_harddrive/hdd_clean.service {{.SYS_INSTALL_PATH}}
+      - sudo cp ./clean_harddrive/hdd_clean.conf {{.CONFIG_PATH}}
+  hdd_clean_enable:
+    desc: enable can setup service
+    cmds:
+      - sudo service enable hdd_clean.service
+  hdd_clean_start:
+    desc: start the service
+    cmds:
+      - sudo service start hdd_clean.service
+  hdd_clean_make:
+    desc: make service
+    deps: [hdd_clean_setup, hdd_clean_install, reload, hdd_clean_start, hdd_clean_enable]
+    silent: true
+
+  # restic backup
+  backup_install: 
+    desc: install the service to user space
+    cmds:
+      - cp ./backup/restic-backup.timer {{.LOCAL_INSTALL_PATH}}
+      - cp ./backup/restic-backup.service {{.LOCAL_INSTALL_PATH}}
+      - cp ./backup/restic-prune.timer {{.LOCAL_INSTALL_PATH}}
+      - cp ./backup/restic-prune.service {{.LOCAL_INSTALL_PATH}}
+      - cp .//backup/restic-backup.conf ${HOME}/.config/
+  backup_enable: 
+    desc: enable the service
+    cmds:
+      - systemctl --user enable --now restic-backup.timer
+      - systemctl --user enable --now restic-prune.timer
+  backup_make:
+    desc: make the backup
+    deps: [backup_install, backup_enable]
+    silent: true

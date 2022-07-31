@@ -1,0 +1,7 @@
+[Unit]
+Description=empty trash bins
+[Timer]
+OnUnitActiveSec=120m
+OnBootSec=10m
+[Install]
+WantedBy=timers.target
