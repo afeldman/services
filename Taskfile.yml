@@ -56,14 +56,14 @@ tasks:
     silent: true
 
   # restic backup
-  backup_install: 
+  sys_backup_install: 
     desc: install the service to user space
     cmds:
-      - cp ./backup/restic-backup.timer {{.LOCAL_INSTALL_PATH}}
-      - cp ./backup/restic-backup.service {{.LOCAL_INSTALL_PATH}}
-      - cp ./backup/restic-prune.timer {{.LOCAL_INSTALL_PATH}}
-      - cp ./backup/restic-prune.service {{.LOCAL_INSTALL_PATH}}
-      - cp .//backup/restic-backup.conf ${HOME}/.config/
+      - cp ./sys_backup/restic-backup.timer {{.LOCAL_INSTALL_PATH}}
+      - cp ./sys_backup/restic-backup.service {{.LOCAL_INSTALL_PATH}}
+      - cp ./sys_backup/restic-prune.timer {{.LOCAL_INSTALL_PATH}}
+      - cp ./sys_backup/restic-prune.service {{.LOCAL_INSTALL_PATH}}
+      - cp ./sys_backup/restic-backup.conf ${HOME}/.config/
   backup_enable: 
     desc: enable the service
     cmds:

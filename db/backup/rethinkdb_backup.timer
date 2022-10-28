@@ -1,0 +1,7 @@
+[Unit]
+Description=Backup with rethinkdb daily
+[Timer]
+OnBootSec=30min
+OnUnitActiveSec=1d
+[Install]
+WantedBy=timers.target

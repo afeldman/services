@@ -1,5 +1,6 @@
 [Unit]
-Description=empty trash bin
+Description=empty trash bins
+
 [Service]
 Type=oneshot
 ExecStart=trash-empty -f

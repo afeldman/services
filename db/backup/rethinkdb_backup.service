@@ -1,0 +1,9 @@
+[Unit]
+Description=Rethinkdb backup service
+
+[Service]
+Type=oneshot
+
+ExecStart=cd ${BACKUP_PATH}; backup_rethinkdb -s "${HOST}:${PORT}" -e ${DATABASE} -f ${BACKUP_FILE} -p ${PASSWORD_FILE} -c ${CERT_FILE} -n ${THREADS}
+ExecStartPost=find ${BACKUP_PATH} -type f -mtime +${DAYS} -name '*.gz' -execdir rm -- '{}' \;
+EnvironmentFile=%h/.config/rethinkdb_backup.conf
